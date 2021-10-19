@@ -31,22 +31,25 @@ export class MongoDBInteraction {
     }
 
     updateUser(data) {
-        return this.db.collection(DB_COLLECTION_NAME).findOne({ "cid": data.cid }).then(resp => {
-            if (resp) {
-                var rewards = data.RewardPoints + resp.RewardPoints;
-                return this.db.collection(DB_COLLECTION_NAME).updateOne({ "cid": data.cid },
-                { $set: { "RewardPoints": rewards, "lastPurchaseDate": new Date(data.currentPurchaseDate).toISOString() } 
-            }).then( res => {
-                    if (res) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-            } else {
-                return false;
-            }
-        })
+        return new Promise((resolve, reject) => {
+            this.db.collection(DB_COLLECTION_NAME).findOne({ "cid": data.cid }).then(resp => {
+                if (resp) {
+                    var rewards = data.RewardPoints + resp.RewardPoints;
+                    this.db.collection(DB_COLLECTION_NAME).updateOne({ "cid": data.cid },
+                        {
+                            $set: { "RewardPoints": rewards, "lastPurchaseDate": new Date(data.currentPurchaseDate).toISOString() }
+                        }).then(res => {
+                            if (res) {
+                                resolve(true);
+                            } else {
+                                resolve(false);
+                            }
+                        });
+                } else {
+                    resolve(false);
+                }
+            })
+        });
     }
 }
 

@@ -32,11 +32,15 @@ class DbInteraction {
     }
  
     checkUserExists(cid) {
-        return this.db.collection(DB_COLLECTION).findOne({ cid }).then(data => {
-            if (data) {
-                return true;
-            }
-            return false;
+        return new Promise((resolve, reject) => {
+            this.db.collection(DB_COLLECTION).findOne({ cid }).then(data => {
+                // console.log(data);
+                if (data) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            });
         });
     }
 }

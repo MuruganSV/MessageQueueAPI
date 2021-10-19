@@ -12,11 +12,13 @@ export function checkAuthandUser(req, res, next) {
         res.status(httpStatusCodes.BAD_REQUEST).send({ error: "BadRequest Error" });
     }
 
-    if (DbInteraction.checkUserExists(req.body.cid)) {
-        next();
-    } else {
-        res.status(httpStatusCodes.NOT_FOUND).send({ error: "User Not Found!" });
-    }
+    DbInteraction.checkUserExists(req.body.cid).then(resp => {
+        if (resp) {
+            next();
+        } else {
+            res.status(httpStatusCodes.NOT_FOUND).send({ error: "User Not Found!" });
+        }
+    });
 }
 
 module.exports = checkAuthandUser;

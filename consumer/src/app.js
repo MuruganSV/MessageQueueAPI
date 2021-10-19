@@ -39,8 +39,8 @@ export class ExpressApp {
     listen() {
         app.listen(process.env.PORT, () => {
             console.log(`Consumer is Up and Running in PORT: ${process.env.PORT}`);
+            this.startConsumerFunction();
         });
-        this.startConsumerFunction();
     }
 
     startConsumerFunction() {
